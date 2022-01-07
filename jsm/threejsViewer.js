@@ -70,17 +70,35 @@ class threejsViewer {
         })
 
         let mesh = null;
-        this.loadData = (paddingData, size, isoValue) =>{
-            mesh = new MarchingCubes(size);
+        this.loadData = () =>{
+            mesh = new MarchingCubes(this.size);
             mesh.material = new.MeshPhongMaterial();
-            mesh.isolation = isoValue;
-            mesh.field = paddingData;
+            mesh.isolation = this.threshold;
+            mesh.field = this.databuffer;
+
 
             this.scene.add(mesh);
         }
 
+        this.updateModel = () => {
+            let mesh = this.scene.getObjectByName('mesh');
+
+            if (mesh === null || mesh == undefined){
+                this.mesh = new MarchingCubes(this.size);
+                this.mesh.name = 'mesh';
+                this.mesh.material = new THREE.MeshBasicMaterial({color: 0xff00ff});
+                this.mesh.isolation = this.threshold;
+                this.mesh.field = this.databuffer;
+                this.mesh.position.set(0,1,0);
+                this.scene.add(this.mesh);
+                return this.mesh;
+            }
+            
+        }
+
         this.download = () => {
             mesh.generateGeometry();
+            return mesh;
         }
 
         this.renderScene()
